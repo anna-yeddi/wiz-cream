@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Wiz Cream Store</title>
+    <meta name="description" content="Wizard Ice Cream Store for You">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <link rel="shortcut icon" href="assets/icons/icecream-2-icon.png" type="image/x-icon">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Navbar -->
+    <div class="nav nav--scrolled nav--shadow">
+      <div class="nav__logo">
+        <h2>Wiz Cream</h2>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app">
+      <div class="product">
+
+        <!-- Product image -->
+        <a class="product__img" :href="image.link">
+          <!-- binding attributes to the {{ expression }} -->
+          <img class="product__img--pic  product__img--border"
+              :src="image.url" :alt="image.alt">
+        </a>
+
+
+        <div class="product__info">
+
+          <!-- Vue {{ expression }} -->
+          <h1 class="product__info--name">{{ product }}</h1>
+          <p class="product__info--desc">{{ description }}</p>
+
+          <!-- Collection of ingredients -->
+          <ul class="product__info--desc">
+            <li v-for="detail in details">{{ detail }}</li>
+          </ul>
+
+          <!-- inventory conditionals -->
+          <p v-show="onSale" class="product__info--sale">
+            Psst... It's On Sale!
+          </p>
+
+
+          <!-- Flavor variants: -->
+          <fieldset class="product__variants">
+
+            <legend id="flavors">Flavors:</legend>
+
+            <div class="product__variants--input picker__radio"
+                role="radiogroup" aria-labelledby="flavors"
+                v-for="variant in variants" :key="variant.variantId">
+              <label :for="variant.variantId" :alt="variant.variantFlavor"
+                    @mouseover="updateProduct(variant.variantImage)"
+                    @focus.capture="updateProduct(variant.variantImage)"
+                    class="picker__radio--label">
+                <input type="radio" name="flavor" class="picker__radio--btn"
+                      :value="variant.variantFlavor" :id="variant.variantId">
+                <img class="picker__radio--pic picker__radio--border"
+                    :src="variant.variantIcon" alt="">
+              </label>
+            </div>
+
+          </fieldset>
+
+          <!-- Size variants: -->
+          <fieldset class="product__variants">
+
+            <legend>Sizes:</legend>
+
+            <div class="product__variants--input"
+                v-for="size in sizes" :key="size.sizeId">
+              <input type="radio" name="size" 
+                    :value="size.label" :id="size.sizeId">
+              <label class="product__variants--input" :for="size.sizeId">
+                {{ size.label }}
+              </label>
+            </div>
+
+          </fieldset>
+
+
+          <!-- Inventory details -->
+          <!-- <p v-if="inStock">In Stock</p> -->
+          <p v-if="inventory > 10">In Stock</p>
+          <p v-else-if="inventory <= 10 && inventory > 0">
+            <span class="product__info--inventory">
+              Almost Sold Out
+            </span>
+            (but it looks like we still have a couple of {{ product + 's' }} for you)
+          </p>
+          <p v-else>Out of Stock</p>
+
+
+          <!-- Cart Controls -->
+          <button v-on:click="addToCart" class="card__btn card__btn--left">
+            Add to Cart
+          </button>
+          <div class="card__btn card__btn--right">Cart({{cart}})</div>
+          <button v-on:click="removeFromCart" class="card__btn card__btn--right">
+            Remove one from Cart
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Vue.JS development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="main.js" async defer></script>
+  </body>
+</html>
