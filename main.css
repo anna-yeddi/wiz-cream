@@ -120,6 +120,14 @@ legend {
   text-transform: uppercase;
 }
 
+.offscreen {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 
 /* Local Styles */
 
@@ -300,6 +308,7 @@ legend {
   flex: 2 10rem;
 }
   .product__info--name {
+    background-color: var(--light); /* fallback color */
     background: linear-gradient(135deg,
                 var(--white) 7.5%, var(--light) 50%, var(--dark) 92.5%);
     background: -moz-linear-gradient(-45deg,
@@ -334,72 +343,91 @@ legend {
   }
 
 .product__variants {
-  /* border: none; */
-  margin: 1.5rem 0;
-  font-size: .9rem;
-}
-
-.product__variants--input {
   display: inline-block;
   display: -moz-inline-box;
   display: -webkit-inline-box;
-  /* flexbox layout */
-  /* display: flex;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  flex-flow: row wrap; */
-  margin: .5rem;
+  margin: 1.5rem 0;
   color: var(--light);
+  /* border: none; */
+  font-size: .95rem;
 }
 
 
 /* Flavor Picker */
 
-.picker__radio {
-  display: block;
-  /* width: 100%; */
-  width: 5rem;
-  height: 5rem;
-  object-position: top;
+.picker__radio--btn {
   background-color: transparent;
-  transition: ease .3s;
+  transition: ease .5s;
 }
-  .picker__radio:hover,
-  .picker__radio:focus {
-    outline: 0;
+  /* Border for img when checked/focused/hovered: */
+  .picker__radio--btn:checked ~ * .picker__radio--pic,
+  .picker__radio--btn:focus ~ * .picker__radio--pic,
+  .picker__radio--btn:hover ~ * .picker__radio--pic {
     cursor: pointer;
+    /* border */
+    padding: 0.25rem;
+    border-radius: 100%;
+    background-color: var(--dark);
+    -webkit-background-clip: padding-box;
+        -moz-background-clip: padding-box;
+            background-clip: padding-box;
+    box-shadow: 0 1rem 3rem var(--shadow);
+    /* transition: */
     -webkit-transform: translateY(-.3rem);
         -moz-transform: translateY(-.3rem);
         -ms-transform: translateY(-.3rem);
           -o-transform: translateY(-.3rem);
             transform: translateY(-.3rem);
   }
-  .picker__radio--btn {
-    display: none;
+.picker__radio--label {
+  display: inline-block;
+  /* width: 100%; */
+  width: 6rem;
+  height: 6rem;
+  margin: .5rem;
+  padding: .5rem;
+  text-align: center;
+  text-transform: capitalize;
+  transition: ease .3s;
+}
+.picker__radio--pic {
+  width: 100%;
+  transition: ease .3s;
+}
+.picker__radio--num {
+  padding-bottom: .5rem;
+  font-size: 4rem;
+  font-weight: bold;
+  line-height: 90%;
+  text-transform: uppercase;
+  transition: ease .3s;
+  background-color: var(--light); /* fallback color */
+  background: linear-gradient(135deg,
+              var(--white) 7.5%, var(--light) 50%, var(--dark) 92.5%);
+  background: -moz-linear-gradient(-45deg,
+              var(--white) 7.5%, var(--light) 50%, var(--dark) 92.5%);
+  background: -webkit-linear-gradient(-45deg,
+              var(--white) 7.5%, var(--light) 50%, var(--dark) 92.5%);
+  -webkit-background-clip: text;
+    -moz-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+  .picker__radio--btn:focus ~ * .picker__radio--num,
+  .picker__radio--btn:hover ~ * .picker__radio--num,
+  .picker__radio--btn:checked ~ * .picker__radio--num {
+    /* State when checked/focused/hovered: */
+    cursor: pointer;
+    font-style: oblique;
+    color: var(--dark);
+    -webkit-text-fill-color: var(--dark);
+    /* transition: */
+    -webkit-transform: translateY(-.3rem);
+        -moz-transform: translateY(-.3rem);
+        -ms-transform: translateY(-.3rem);
+          -o-transform: translateY(-.3rem);
+            transform: translateY(-.3rem);
   }
-  .picker__radio--label {
-  }
-  .picker__radio--pic {
-    width: 100%;
-  }
-    .picker__radio--btn:checked ~ .picker__radio--border {
-    /* .picker__radio--border { */
-      /* border */
-      padding: 0.25rem;
-      border-radius: 100%;
-      background-color: var(--light); /* fallback color */
-      background: linear-gradient(135deg,
-                  var(--white) 7.5%, var(--light) 50%, var(--darker) 92.5%);
-      background: -moz-linear-gradient(-45deg,
-                  var(--white) 7.5%, var(--light) 50%, var(--darker) 92.5%);
-      background: -webkit-linear-gradient(-45deg,
-                  var(--white) 7.5%, var(--light) 50%, var(--darker) 92.5%);
-      -webkit-background-clip: padding-box;
-          -moz-background-clip: padding-box;
-              background-clip: padding-box;
-      box-shadow: 0 1rem 3rem var(--shadow);
-      transition: ease .3s;
-    }
 
 
 /* Controls */

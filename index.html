@@ -58,19 +58,18 @@
 
             <legend id="flavors">Flavors:</legend>
 
-            <div class="product__variants--input picker__radio"
-                role="radiogroup" aria-labelledby="flavors"
-                v-for="variant in variants" :key="variant.variantId">
-              <label :for="variant.variantId" :alt="variant.variantFlavor"
-                    @mouseover="updateProduct(variant.variantImage)"
-                    @focus.capture="updateProduct(variant.variantImage)"
-                    class="picker__radio--label">
-                <input type="radio" name="flavor" class="picker__radio--btn"
+              <div v-for="(variant, index) in variants" :key="variant.variantId"
+                  class="picker__radio--label">
+                <input type="radio" name="flavor" class="picker__radio--btn offscreen"
                       :value="variant.variantFlavor" :id="variant.variantId">
-                <img class="picker__radio--pic picker__radio--border"
-                    :src="variant.variantIcon" alt="">
-              </label>
-            </div>
+                <label :for="variant.variantId"
+                      @mouseover="updateProduct(variant.variantImage)"
+                      @focus="updateProduct(variant.variantImage)">
+                  <img class="picker__radio--pic"
+                      :src="variant.variantIcon" role="presentation">
+                    {{ variant.variantFlavor }}
+                </label>
+              </div>
 
           </fieldset>
 
@@ -79,11 +78,14 @@
 
             <legend>Sizes:</legend>
 
-            <div class="product__variants--input"
+            <div class="picker__radio--label"
                 v-for="size in sizes" :key="size.sizeId">
-              <input type="radio" name="size" 
+              <input type="radio" name="size" class="picker__radio--btn offscreen"
                     :value="size.label" :id="size.sizeId">
-              <label class="product__variants--input" :for="size.sizeId">
+              <label :for="size.sizeId">
+                <div class="picker__radio--num">
+                  {{ size.label[0] }}
+                </div>
                 {{ size.label }}
               </label>
             </div>
@@ -107,7 +109,7 @@
           <button v-on:click="addToCart" class="card__btn card__btn--left">
             Add to Cart
           </button>
-          <div class="card__btn card__btn--right">Cart({{cart}})</div>
+          <button class="card__btn card__btn--right">Cart({{cart}})</button>
           <button v-on:click="removeFromCart" class="card__btn card__btn--right">
             Remove one from Cart
           </button>
