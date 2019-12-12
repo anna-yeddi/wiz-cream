@@ -29,22 +29,30 @@
       <div class="product">
 
         <!-- Product image -->
-        <a class="product__img" :href="image.link">
+        <a class="product__img"
+        :href="image.link">
           <!-- binding attributes to the {{ expression }} -->
           <img class="product__img--pic  product__img--border"
-              :src="image.url" :alt="image.alt">
+              :src="image.url"
+              :alt="image.alt">
         </a>
 
 
         <div class="product__info">
 
           <!-- Vue {{ expression }} -->
-          <h1 class="product__info--name">{{ product }}</h1>
-          <p class="product__info--desc">{{ description }}</p>
+          <h1 class="product__info--name">
+            {{ product }}
+          </h1>
+          <p class="product__info--desc">
+            {{ description }}
+          </p>
 
           <!-- Collection of ingredients -->
           <ul class="product__info--desc">
-            <li v-for="detail in details">{{ detail }}</li>
+            <li v-for="detail in details">
+              {{ detail }}
+            </li>
           </ul>
 
           <!-- inventory conditionals -->
@@ -58,15 +66,19 @@
 
             <legend id="flavors">Flavors:</legend>
 
-              <div v-for="(variant, index) in variants" :key="variant.variantId"
+              <div v-for="(variant, index) in variants" 
+                  :key="variant.variantId"
                   class="picker__radio--label">
-                <input type="radio" name="flavor" class="picker__radio--btn offscreen"
-                      :value="variant.variantFlavor" :id="variant.variantId">
+                <input type="radio" name="flavor"
+                      class="picker__radio--btn offscreen"
+                      :value="variant.variantFlavor"
+                      :id="variant.variantId">
                 <label :for="variant.variantId"
                       @mouseover="updateProduct(variant.variantImage)"
                       @focus="updateProduct(variant.variantImage)">
                   <img class="picker__radio--pic"
-                      :src="variant.variantIcon" role="presentation">
+                      :src="variant.variantIcon"
+                      role="presentation">
                     {{ variant.variantFlavor }}
                 </label>
               </div>
@@ -79,9 +91,13 @@
             <legend>Sizes:</legend>
 
             <div class="picker__radio--label"
-                v-for="size in sizes" :key="size.sizeId">
-              <input type="radio" name="size" class="picker__radio--btn offscreen"
-                    :value="size.label" :id="size.sizeId">
+                v-for="size in sizes"
+                :key="size.sizeId">
+              <input type="radio"
+                    name="size"
+                    class="picker__radio--btn offscreen"
+                    :value="size.label"
+                    :id="size.sizeId">
               <label :for="size.sizeId">
                 <div class="picker__radio--num">
                   {{ size.label[0] }}
@@ -95,22 +111,42 @@
 
           <!-- Inventory details -->
           <!-- <p v-if="inStock">In Stock</p> -->
-          <p v-if="inventory > 10">In Stock</p>
+          <p v-if="inventory > 10">
+            In Stock
+          </p>
           <p v-else-if="inventory <= 10 && inventory > 0">
             <span class="product__info--inventory">
               Almost Sold Out
             </span>
-            (but it looks like we still have a couple of {{ product + 's' }} for you)
+            (but it looks like we still have a couple of
+            {{ product + 's' }} for you)
           </p>
-          <p v-else>Out of Stock</p>
+          <p v-else
+              :style="{ textDecoration: 'line-through'}">
+            Out of Stock
+          </p>
 
 
           <!-- Cart Controls -->
-          <button v-on:click="addToCart" class="card__btn card__btn--left">
+          <button v-on:click="addToCart"
+                  class="card__btn card__btn--left"
+                  :disabled="!inStock"
+                  :class="{ 'card__btn--disabled': !inStock }">
             Add to Cart
           </button>
-          <button class="card__btn card__btn--right">Cart({{cart}})</button>
-          <button v-on:click="removeFromCart" class="card__btn card__btn--right">
+          <!-- <button v-on:click="addToCart"
+                  class="card__btn card__btn--left"
+                  :disabled="!inStock"
+                  :class="{ 'card__btn--disabled': !inStock }">
+            Add to Cart
+          </button> -->
+          <button class="card__btn card__btn--right">
+            Cart({{cart}})
+          </button>
+          <button v-on:click="removeFromCart"
+                  class="card__btn card__btn--right"
+                  :disabled="[(cart > 0) ? false : true]"
+                  :class="[(cart > 0) ? '' : 'card__btn--disabled']">
             Remove one from Cart
           </button>
 

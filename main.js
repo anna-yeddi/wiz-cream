@@ -10,8 +10,8 @@ const app = new Vue({
       alt: 'Hand holding light beige ice cream in a waffle cone',
       link: '#',
     },
-    // inStock: true,
-    inventory: 9,
+    // inStock: false,
+    inventory: 0,
     onSale: true,
     // collection of alias ingredients to loop over
     details: ["Organic gelato","Almond milk","Diary-free","Farm to table ingredients"],
@@ -88,6 +88,11 @@ const app = new Vue({
     // ES6 syntax:
     updateProduct(variantImage) {
       this.image = variantImage;
+    }
+  },
+  computed: {
+    inStock() {
+      return this.inventory > 0;
     }
   }
 });
