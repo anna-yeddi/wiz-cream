@@ -28,7 +28,7 @@
 }
 
 *:focus {
-  outline: 2px solid var(--dark)!important;  
+  outline: .25rem solid var(--dark)!important;  
 }
 
 /* Global styles */
@@ -256,6 +256,7 @@ legend {
   display: block;
   margin-right: 1.5rem;
   width: 100%;
+  height: fit-content;
   background: transparent;
   object-position: top;
 
@@ -284,7 +285,6 @@ legend {
   }
   .product__img:hover,
   .product__img:focus {
-    outline: 0;
     background-color: transparent;
     cursor: pointer;
     -webkit-transform: translateY(-.3rem);

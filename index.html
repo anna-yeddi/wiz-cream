@@ -30,7 +30,7 @@
 
         <!-- Product image -->
         <a class="product__img"
-        :href="image.link">
+          :href="image.link">
           <!-- binding attributes to the {{ expression }} -->
           <img class="product__img--pic  product__img--border"
               :src="image.url"
@@ -41,8 +41,12 @@
         <div class="product__info">
 
           <!-- Vue {{ expression }} -->
+            <!-- <h1 class="product__info--name">
+              {{ product }}
+            </h1> -->
+          <!-- Computed value -->
           <h1 class="product__info--name">
-            {{ product }}
+            {{ title }}
           </h1>
           <p class="product__info--desc">
             {{ description }}
@@ -73,13 +77,17 @@
                       class="picker__radio--btn offscreen"
                       :value="variant.variantFlavor"
                       :id="variant.variantId">
+                      <!-- :checked="[(variants[0]) ? 'true' : 'false']"> -->
+                      <!-- :checked="[(index == 0) ? 'true' : 'false']"> -->
                 <label :for="variant.variantId"
-                      @mouseover="updateProduct(variant.variantImage)"
-                      @focus="updateProduct(variant.variantImage)">
+                      @mouseover="updateProduct(index)"
+                      @focus="updateProduct(index)">
+                      <!-- @mouseover="updateProduct(variant.variantImage)"
+                      @focus="updateProduct(variant.variantImage)"> -->
                   <img class="picker__radio--pic"
                       :src="variant.variantIcon"
                       role="presentation">
-                    {{ variant.variantFlavor }}
+                  {{ variant.variantFlavor }}
                 </label>
               </div>
 
@@ -145,8 +153,10 @@
           </button>
           <button v-on:click="removeFromCart"
                   class="card__btn card__btn--right"
-                  :disabled="[(cart > 0) ? false : true]"
-                  :class="[(cart > 0) ? '' : 'card__btn--disabled']">
+                  :disabled="cartIsEmpty"
+                  :class="{ 'card__btn--disabled': cartIsEmpty }">
+                  <!-- :class="[cartIsEmpty ? 'card__btn--disabled' : '']"> -->
+                  <!-- :class="[(cart > 0) ? '' : 'card__btn--disabled']"> -->
             Remove one from Cart
           </button>
 

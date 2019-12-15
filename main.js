@@ -3,15 +3,20 @@ const app = new Vue({
   // Vue options:
   el: '#app',
   data: {
-    product: 'Ice Cream Cone',
+    type: 'Ice Cream',
+    product: 'Cone',
     description: 'Almond milk organic gelato served in a fresh crunchy waffle cone.',
-    image: {
-      url: './assets/rachael-gorjestani-154906-unsplash.jpg',
-      alt: 'Hand holding light beige ice cream in a waffle cone',
-      link: '#',
-    },
-    // inStock: false,
-    inventory: 0,
+    // see computed value for image:
+    selectedVariant: 0,
+      // image: {
+      //   url: './assets/rachael-gorjestani-154906-unsplash.jpg',
+      //   alt: 'Hand holding light beige ice cream in a waffle cone',
+      //   link: '#',
+      // },
+    // see computed inStock value:
+      // inStock: false,
+    // see computed inventory value:
+      // inventory: 9,
     onSale: true,
     // collection of alias ingredients to loop over
     details: ["Organic gelato","Almond milk","Diary-free","Farm to table ingredients"],
@@ -19,6 +24,7 @@ const app = new Vue({
     variants: [
       {
         variantId: 3976,
+        variantQuantity: 10,
         variantFlavor: "mango",
         variantIcon: "./assets/icons/mango-icon.png",
         variantImage: {
@@ -29,6 +35,7 @@ const app = new Vue({
       },
       {
         variantId: 3977,
+        variantQuantity: 0,
         variantFlavor: "pear",
         variantIcon: "./assets/icons/pear-icon.png",
         variantImage: {
@@ -39,6 +46,7 @@ const app = new Vue({
       },
       {
         variantId: 3978,
+        variantQuantity: 3,
         variantFlavor: "grapes",
         variantIcon: "./assets/icons/grapes-icon.png",
         variantImage: {
@@ -49,6 +57,7 @@ const app = new Vue({
       },
       {
         variantId: 3979,
+        variantQuantity: 15,
         variantFlavor: "watermelon",
         variantIcon: "./assets/icons/watermelon-icon.png",
         variantImage: {
@@ -81,18 +90,34 @@ const app = new Vue({
       // scope is "data":
       this.cart += 1
     },
-    removeFromCart: function () {
+    removeFromCart() {
       // scope is "data":
-      if (this.cart > 0) { this.cart -= 1 }
+      if (this.cart > 0) { this.cart--; }
     },
     // ES6 syntax:
-    updateProduct(variantImage) {
-      this.image = variantImage;
+    updateProduct(index) {
+      this.selectedVariant = index;
+      console.log(index);
     }
+    // updateProduct(variantImage) {
+    //   this.image = variantImage;
+    // }
   },
   computed: {
+    title() {
+      return this.type + ' ' + this.product;
+    },
+    image() {
+      return this.variants[this.selectedVariant].variantImage;
+    },
+    inventory() {
+      return this.variants[this.selectedVariant].variantQuantity;
+    },
     inStock() {
       return this.inventory > 0;
+    },
+    cartIsEmpty() {
+      return this.cart === 0;
     }
   }
 });
