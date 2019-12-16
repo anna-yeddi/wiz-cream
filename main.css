@@ -347,9 +347,6 @@ legend {
   }
 
 .product__variants {
-  display: inline-block;
-  display: -moz-inline-box;
-  display: -webkit-inline-box;
   margin: 1.5rem 0;
   color: var(--light);
   /* border: none; */
@@ -536,4 +533,25 @@ legend {
         -ms-transform: none;
           -o-transform: none;
             transform: none;
+  }
+
+
+/* Cart in navbar */
+
+/* will need to be fixed in DOM for a11y */
+.card__btn--cart {
+  position: fixed;
+  top: 0;
+  right: 1.25rem;
+  height: 3.5rem;
+  z-index: 101;
+  background: var(--white);
+  color: var(--dark);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+  @media (min-width: 62rem) {
+    .card__btn--cart {
+      height: 4.5rem;
+    }
   }

@@ -4,6 +4,11 @@ Vue.component('product', {
     premium: {
       type: Boolean,
       required: true
+    },
+    cart: {
+      type: Array,
+      required: true,
+      default: []
     }
   },
   template: `
@@ -22,9 +27,6 @@ Vue.component('product', {
       <div class="product__info">
 
         <!-- Vue {{ expression }} -->
-          <!-- <h1 class="product__info--name">
-            {{ product }}
-          </h1> -->
         <!-- Computed value -->
         <h1 class="product__info--name">
           {{ title }}
@@ -34,11 +36,7 @@ Vue.component('product', {
         </p>
 
         <!-- Collection of ingredients -->
-        <ul class="product__info--desc">
-          <li v-for="detail in details">
-            {{ detail }}
-          </li>
-        </ul>
+        <product-ingredients :details="details"></product-ingredients>
 
         <!-- inventory conditionals -->
         <p v-show="onSale" class="product__info--sale">
@@ -124,15 +122,7 @@ Vue.component('product', {
                 :class="{ 'card__btn--disabled': !inStock }">
           Add to Cart
         </button>
-        <!-- <button v-on:click="addToCart"
-                class="card__btn card__btn--left"
-                :disabled="!inStock"
-                :class="{ 'card__btn--disabled': !inStock }">
-          Add to Cart
-        </button> -->
-        <button class="card__btn card__btn--right">
-          Cart({{cart}})
-        </button>
+
         <button v-on:click="removeFromCart"
                 class="card__btn card__btn--right"
                 :disabled="cartIsEmpty"
@@ -151,17 +141,8 @@ Vue.component('product', {
       type: 'Ice Cream',
       product: 'Cone',
       description: 'Almond milk organic gelato served in a fresh crunchy waffle cone.',
-      // see computed value for image:
+      // for computed values of image and inventory
       selectedVariant: 0,
-        // image: {
-        //   url: './assets/rachael-gorjestani-154906-unsplash.jpg',
-        //   alt: 'Hand holding light beige ice cream in a waffle cone',
-        //   link: '#',
-        // },
-      // see computed inStock value:
-        // inStock: false,
-      // see computed inventory value:
-        // inventory: 9,
       onSale: true,
       // collection of alias ingredients to loop over
       details: ["Organic gelato","Almond milk","Diary-free","Farm to table ingredients"],
@@ -226,28 +207,22 @@ Vue.component('product', {
           label: "3 scoops",
           sizeId: 003
         }
-      ],
-      cart: 0
+      ]
     }
   },
   methods: {
     // ES5:
     addToCart: function () {
-      // scope is "data":
-      this.cart += 1
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
     },
     removeFromCart() {
-      // scope is "data":
-      if (this.cart > 0) { this.cart--; }
+      this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
     },
     // ES6 syntax:
     updateProduct(index) {
       this.selectedVariant = index;
-      console.log(index);
+      // console.log(index);
     }
-    // updateProduct(variantImage) {
-    //   this.image = variantImage;
-    // }
   },
   computed: {
     title() {
@@ -274,11 +249,49 @@ Vue.component('product', {
   }
 })
 
+Vue.component('product-ingredients', {
+  props: {
+    details: {
+      type: Array,
+      required: true,
+      default: ["Organic ingredients"]
+    }
+  },
+  template: `
+    <div>
+      <!-- Collection of ingredients -->
+      <ul class="product__info--desc">
+        <li v-for="detail in details">
+          {{ detail }}
+        </li>
+      </ul>
+    </div>
+  `,
+  // data() {
+  //   return {
+  //     // details: ["Organic gelato","Almond milk","Diary-free","Farm to table ingredients"]
+  //   }
+  // }
+})
+
 // new Vue instance:
 const app = new Vue({
   // Vue options:
   el: '#app',
   data: {
-    userIsPremium: false
+    userIsPremium: false,
+    cart: []
+  },
+  methods: {
+    updateCartIncr(id) {
+      // scope is "data" on #app with emitted event:
+      this.cart.push(id);
+    },
+    updateCartDecr(id) {
+      // scope is "data" on #app with emitted event:
+      if (this.cart.length > 0) {
+        this.cart.pop(id);
+      }
+    }
   }
 });

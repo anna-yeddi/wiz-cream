@@ -26,7 +26,14 @@
 
     <!-- Main App -->
     <div id="app">
-      <product :premium="userIsPremium"></product>
+      <button class="card__btn card__btn--cart nav--shadow">
+        Cart({{cart.length}})
+      </button>
+
+      <product :premium="userIsPremium"
+                :cart="cart"
+                @add-to-cart="updateCartIncr"
+                @remove-from-cart="updateCartDecr"></product>
     </div>
 
 
