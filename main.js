@@ -56,7 +56,7 @@ Vue.component('product', {
                     class="picker__radio--btn offscreen"
                     :value="variant.variantFlavor"
                     :id="variant.variantId">
-                    <!-- :checked="[(variants[0]) ? 'true' : 'false']"> -->
+                    <!-- :checked="[(variants[0]) ? 'true' : 'false']">
                     <!-- :checked="[(index == 0) ? 'true' : 'false']"> -->
               <label :for="variant.variantId"
                     @mouseover="updateProduct(index)"
@@ -126,11 +126,38 @@ Vue.component('product', {
         <button v-on:click="removeFromCart"
                 class="card__btn card__btn--right"
                 :disabled="cartIsEmpty"
-                :class="{ 'card__btn--disabled': cartIsEmpty }">
-                <!-- :class="[cartIsEmpty ? 'card__btn--disabled' : '']"> -->
+                :class="[cartIsEmpty ? 'card__btn--disabled' : '']">
+                <!-- :disabled="[(cartIsEmpty || !cartHasItem)]" -->
+                <!-- :class="[(cartIsEmpty || !cartHasItem) ? 'card__btn--disabled' : '']"> -->
                 <!-- :class="[(cart > 0) ? '' : 'card__btn--disabled']"> -->
-          Remove one from Cart
+          Remove from Cart
         </button>
+
+      </div>
+      
+      <!-- Product review component's data -->
+      <div class="product__reviews">
+
+        <div>
+          <h2>Reviews</h2>
+          <p v-if="!reviews.length">There are no reviews yet.</p>
+          <ul>
+            <li v-for="review in reviews">
+              <p>
+                <strong>{{ review.name }}</strong>
+                rated this product at
+                <strong>{{ review.rating }}/5</strong>
+              </p>
+              <p>"{{ review.review }}"</p>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Product review component -->
+        <!-- lestens to review-submitted to trigger method addReview -->
+        <product-review class="product__review"
+                        @review-submitted="addReview">
+        </product-review>
 
       </div>
 
@@ -149,7 +176,7 @@ Vue.component('product', {
       // collection of variants
       variants: [
         {
-          variantId: 3976,
+          variantId: 3901,
           variantQuantity: 10,
           variantFlavor: "mango",
           variantIcon: "./assets/icons/mango-icon.png",
@@ -160,7 +187,7 @@ Vue.component('product', {
           }
         },
         {
-          variantId: 3977,
+          variantId: 3902,
           variantQuantity: 0,
           variantFlavor: "pear",
           variantIcon: "./assets/icons/pear-icon.png",
@@ -171,7 +198,7 @@ Vue.component('product', {
           }
         },
         {
-          variantId: 3978,
+          variantId: 3903,
           variantQuantity: 3,
           variantFlavor: "grapes",
           variantIcon: "./assets/icons/grapes-icon.png",
@@ -182,7 +209,7 @@ Vue.component('product', {
           }
         },
         {
-          variantId: 3979,
+          variantId: 3904,
           variantQuantity: 15,
           variantFlavor: "watermelon",
           variantIcon: "./assets/icons/watermelon-icon.png",
@@ -207,21 +234,25 @@ Vue.component('product', {
           label: "3 scoops",
           sizeId: 003
         }
-      ]
+      ],
+      reviews: []
     }
   },
   methods: {
     // ES5:
     addToCart: function () {
-      this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
+      this.$emit('cart-add', this.variants[this.selectedVariant].variantId)
     },
     removeFromCart() {
-      this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
+      this.$emit('cart-remove', this.variants[this.selectedVariant].variantId)
     },
     // ES6 syntax:
     updateProduct(index) {
       this.selectedVariant = index;
       // console.log(index);
+    },
+    addReview(productReview) {
+      this.reviews.push(productReview);
     }
   },
   computed: {
@@ -238,7 +269,15 @@ Vue.component('product', {
       return this.inventory > 0;
     },
     cartIsEmpty() {
-      return this.cart === 0;
+      return this.cart.length === 0;
+    },
+    cartHasItem() {
+      for (let i = this.cart.length - 1; i >= 0; i--) {
+        if (this.cart[i] === this.variants[this.selectedVariant].variantId) {
+          return true
+        }
+      };
+      return false
     },
     shipping() {
       if (this.premium) {
@@ -247,7 +286,7 @@ Vue.component('product', {
       return "$2.99"
     }
   }
-})
+});
 
 Vue.component('product-ingredients', {
   props: {
@@ -274,6 +313,89 @@ Vue.component('product-ingredients', {
   // }
 })
 
+Vue.component('product-review', {
+  template: `
+    <form @submit.prevent="onSubmit">
+
+      <h3>Leave Your Review</h3>
+
+      <p v-if="errors.length" class="form__errors">
+        <strong>Please correct the following error(s):</strong>
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </p>
+
+      <p>
+        <label for="name">Name*:
+          <span class="offscreen">required field</span>
+        </label>
+        <input id="name"
+                v-model="name">
+      </p>
+
+      <p>
+        <label for="rating">Rating (out of 5)*:
+          <span class="offscreen">required field</span>
+        </label>
+        <select id="rating"
+                v-model.number="rating">
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="review">Review:</label>
+        <textarea id="review"
+                  v-model="review"></textarea>
+      </p>
+
+      <p>
+        <input type="submit" value="Submit"
+              class="card__btn card__btn--left">
+      </p>
+
+    </form>
+  `,
+  data() {
+    return {
+      name: null,
+      rating: null,
+      review: null,
+      errors: []
+    }
+  },
+  methods: {
+    onSubmit() {
+      // custom form validation
+      if (this.name && this.rating) {
+
+        // take input values to
+        // create an object from input
+        let productReview = {
+          name: this.name,
+          rating: this.rating,
+          review: this.review
+        }
+        // emit data to parent component
+        // (what to trigger, what to send)
+        this.$emit('review-submitted', productReview);
+        // reset input values
+        this.name = null;
+        this.rating = null;
+        this.review = null
+      } else {
+        if (!this.name) this.errors.push("Error: Name is required.")
+        if (!this.rating) this.errors.push("Error: Rating is required.")
+      }      
+    }
+  }
+})
+
 // new Vue instance:
 const app = new Vue({
   // Vue options:
@@ -283,14 +405,18 @@ const app = new Vue({
     cart: []
   },
   methods: {
-    updateCartIncr(id) {
+    cartAdd(id) {
       // scope is "data" on #app with emitted event:
       this.cart.push(id);
     },
-    updateCartDecr(id) {
+    cartRemove(id) {
       // scope is "data" on #app with emitted event:
       if (this.cart.length > 0) {
-        this.cart.pop(id);
+        for (let i = this.cart.length - 1; i >= 0; i--) {
+          if (this.cart[i] == id) {
+            this.cart.splice(i, 1);
+          }
+        }
       }
     }
   }

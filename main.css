@@ -555,3 +555,14 @@ legend {
       height: 4.5rem;
     }
   }
+
+
+/* Product reviews */
+
+.product__reviews {
+  flex: 1 0 100%;
+}
+
+.form__errors {
+  color: var(--darker);
+}
