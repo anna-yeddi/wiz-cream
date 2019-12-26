@@ -315,50 +315,68 @@ Vue.component('product-ingredients', {
 
 Vue.component('product-review', {
   template: `
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit" novalidate>
+      <fieldset>
+        <legend>
+          Leave Your Review
+        </legend>
 
-      <h3>Leave Your Review</h3>
+        <p v-if="success" class="form__success" role="alert">
+          <strong>Thank you for sharing!</strong>
+          Your review is submitted
+        </p>
 
-      <p v-if="errors.length" class="form__errors">
-        <strong>Please correct the following error(s):</strong>
-        <ul>
-          <li v-for="error in errors">{{ error }}</li>
-        </ul>
-      </p>
+        <div v-if="!success">
+          <p v-if="errors.length" class="form__errors"
+              role="alert">
+            <strong>Please correct the following error(s):</strong>
+            <ul>
+              <li v-for="error in errors" :key="errors[this.error]">
+                <span :id="'formError'+error[7]">
+                  {{ error }}
+                </span>
+              </li>
+            </ul>
+          </p>
 
-      <p>
-        <label for="name">Name*:
-          <span class="offscreen">required field</span>
-        </label>
-        <input id="name"
-                v-model="name">
-      </p>
+    
+          <p>
+            <label for="name">Name*:
+              <span class="offscreen">required field</span>
+            </label>
+            <input id="name" class="form__input" autocomplete="name"
+                    v-model="name" aria-describedby="formErrorN"
+                    required>
+          </p>
+    
+          <p>
+            <label for="rating">Rating (out of 5)*:
+              <span class="offscreen">required field</span>
+            </label>
+            <select id="rating" class="form__input--select"
+                    v-model.number="rating" aria-describedby="formErrorR"
+                    required>
+              <option>5</option>
+              <option>4</option>
+              <option>3</option>
+              <option>2</option>
+              <option>1</option>
+            </select>
+          </p>
+    
+          <p>
+            <label for="review">Review:</label>
+            <textarea id="review" class="form__input" rows="4"
+                      v-model="review"></textarea>
+          </p>
+    
+          <p>
+            <input type="submit" value="Submit"
+                  class="card__btn card__btn--left">
+          </p>
+        </div>
 
-      <p>
-        <label for="rating">Rating (out of 5)*:
-          <span class="offscreen">required field</span>
-        </label>
-        <select id="rating"
-                v-model.number="rating">
-          <option>5</option>
-          <option>4</option>
-          <option>3</option>
-          <option>2</option>
-          <option>1</option>
-        </select>
-      </p>
-
-      <p>
-        <label for="review">Review:</label>
-        <textarea id="review"
-                  v-model="review"></textarea>
-      </p>
-
-      <p>
-        <input type="submit" value="Submit"
-              class="card__btn card__btn--left">
-      </p>
-
+      </fieldset>
     </form>
   `,
   data() {
@@ -366,14 +384,16 @@ Vue.component('product-review', {
       name: null,
       rating: null,
       review: null,
-      errors: []
+      errors: [],
+      success: false
     }
   },
   methods: {
     onSubmit() {
+      // reset errors:
+      this.errors = [];
       // custom form validation
       if (this.name && this.rating) {
-
         // take input values to
         // create an object from input
         let productReview = {
@@ -387,11 +407,13 @@ Vue.component('product-review', {
         // reset input values
         this.name = null;
         this.rating = null;
-        this.review = null
+        this.review = null;
+        // add success message:
+        this.success = true;
       } else {
-        if (!this.name) this.errors.push("Error: Name is required.")
-        if (!this.rating) this.errors.push("Error: Rating is required.")
-      }      
+        if (!this.name) this.errors.push("Error: Please enter your name.")
+        if (!this.rating) this.errors.push("Error: Please select a rating for this product.")
+      }
     }
   }
 })

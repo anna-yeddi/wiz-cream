@@ -459,6 +459,7 @@ legend {
   font-size: 0.9rem;
   font-weight: bold;
   line-height: 1.5;
+  letter-spacing: 1px;
   white-space: nowrap;
   -webkit-transition: color .2s ease-in-out, background-color .2s ease-in-out, 
                       border-color .2s ease-in-out, box-shadow .2s ease-in-out;
@@ -538,7 +539,7 @@ legend {
 
 /* Cart in navbar */
 
-/* will need to be fixed in DOM for a11y */
+/* has to be fixed the position in DOM for a11y */
 .card__btn--cart {
   position: fixed;
   top: 0;
@@ -548,6 +549,7 @@ legend {
   background: var(--white);
   color: var(--dark);
   font-size: 1.1rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
   @media (min-width: 62rem) {
@@ -563,6 +565,31 @@ legend {
   flex: 1 0 100%;
 }
 
+.form__success {
+  width: fit-content;
+  padding: .25rem .75rem;
+  background-color: var(--success);
+  color: var(--white);
+}
+
 .form__errors {
   color: var(--darker);
+}
+
+.form__input {
+  margin: .5rem 0;
+  width: 98%;
+  font-size: large;
+  letter-spacing: 0.5px;
+}
+
+#name:valid,
+#rating:valid {
+  border: double 3px var(--success);
+}
+
+.form__input--select {
+  margin: 0 .5rem;
+  border-radius: 0;
+  font-size: large;
 }
