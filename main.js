@@ -138,8 +138,11 @@ Vue.component('product', {
       <!-- Product review component's data -->
       <div class="product__reviews">
 
+        <!-- Review Tabs -->
+        <h2>Reviews</h2>
+        <product-tabs></product-tabs>
+        
         <div>
-          <h2>Reviews</h2>
           <p v-if="!reviews.length">There are no reviews yet.</p>
           <ul>
             <li v-for="review in reviews">
@@ -414,6 +417,27 @@ Vue.component('product-review', {
         if (!this.name) this.errors.push("Error: Please enter your name.")
         if (!this.rating) this.errors.push("Error: Please select a rating for this product.")
       }
+    }
+  }
+})
+
+// Tabs:
+Vue.component('product-tabs', {
+  template: `
+    <div class="product__tabs">
+      <div role="tablist" aria-label="Reviews">
+        <button class="tab" aria-selected="false"
+              :aria-controls="reveiwTabPanel + 'index'"
+              v-for="(tab, index) in tabs"
+              :key="index" :id="reveiwTab + 'index'">
+          {{ tab }}
+        </button>
+      </div>
+    </div>
+  `,
+  data(){ 
+    return {
+      tabs: ['Reviews', 'Leave a review']
     }
   }
 })
