@@ -1,0 +1,106 @@
+[role="tablist"] {
+  margin: 0 0 -0.1em;
+  overflow: visible;
+}
+
+[role="tab"] {
+  position: relative;
+  margin: 1rem 1rem 0 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--light);
+  border-radius: 0.2rem 0.2rem 0 0;
+  box-shadow: 0 0 0.2em var(--shadow);
+  overflow: visible;
+  color: var(--info);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  background: var(--darker);
+}
+
+[role="tab"]:hover::before,
+[role="tab"]:focus::before,
+[role="tab"][aria-selected="true"]::before {
+  position: absolute;
+  bottom: 100%;
+  right: -1px;
+  left: -1px;
+  border-radius: 0.2rem 0.2rem 0 0;
+  border-top: 5px solid var(--dark);
+  content: '';
+}
+
+[role="tab"][aria-selected="true"] {
+  border-radius: 0;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  color: var(--light);
+  background: var(--info);
+  outline: 0;
+}
+
+[role="tab"][aria-selected="true"]:not(:focus):not(:hover)::before {
+  border-top: 5px solid var(--light);
+}
+
+[role="tab"][aria-selected="true"]::after {
+  position: absolute;
+  z-index: 3;
+  bottom: -1px;
+  right: 0;
+  left: 0;
+  height: 0.2rem;
+  background: var(--info);
+  box-shadow: none;
+  content: '';
+}
+
+[role="tab"]:hover,
+[role="tab"]:focus,
+[role="tab"]:active {
+  outline: 0;
+  border-radius: 0;
+  color: var(--darker);
+  background-color: var(--info);
+  cursor: pointer;
+}
+
+[role="tab"]:hover::before,
+[role="tab"]:focus::before {
+  border-color: var(--dark);
+}
+
+[role="tabpanel"] {
+  position: relative;
+  z-index: 2;
+  padding: 0.5rem 0.5rem 0.7rem;
+  border: 2px solid var(--light);
+  box-shadow: 0 0 0.2rem var(--shadow);
+  background: var(--info);
+}
+
+[role="tabpanel"]:focus {
+  border-color: var(--dark);
+  box-shadow: 0.2rem 0.2rem 0.2rem var(--dark);
+  outline: 0!important;
+}
+
+/* [role="tabpanel"]:focus::after {
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+  left: -1px;
+  border-bottom: 3px solid var(--dark);
+  border-radius: 0 0 0.2rem 0.2rem;
+  content: '';
+} */
+
+[role="tabpanel"] p {
+  margin: 0;
+}
+
+[role="tabpanel"] * {
+  padding: 0.5rem;
+}

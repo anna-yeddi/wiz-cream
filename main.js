@@ -1,3 +1,6 @@
+// Life-cycle hook:
+let eventBus = new Vue()
+
 // new Vue.component:
 Vue.component('product', {
   props: {
@@ -140,27 +143,7 @@ Vue.component('product', {
 
         <!-- Review Tabs -->
         <h2>Reviews</h2>
-        <product-tabs></product-tabs>
-        
-        <div>
-          <p v-if="!reviews.length">There are no reviews yet.</p>
-          <ul>
-            <li v-for="review in reviews">
-              <p>
-                <strong>{{ review.name }}</strong>
-                rated this product at
-                <strong>{{ review.rating }}/5</strong>
-              </p>
-              <p>"{{ review.review }}"</p>
-            </li>
-          </ul>
-        </div>
-        
-        <!-- Product review component -->
-        <!-- lestens to review-submitted to trigger method addReview -->
-        <product-review class="product__review"
-                        @review-submitted="addReview">
-        </product-review>
+        <product-tabs :reviews="reviews"></product-tabs>
 
       </div>
 
@@ -253,9 +236,6 @@ Vue.component('product', {
     updateProduct(index) {
       this.selectedVariant = index;
       // console.log(index);
-    },
-    addReview(productReview) {
-      this.reviews.push(productReview);
     }
   },
   computed: {
@@ -288,6 +268,12 @@ Vue.component('product', {
       } 
       return "$2.99"
     }
+  },
+  // Life-cycle hook:
+  mounted() {
+    eventBus.$on('review-submitted', productReview => {
+      this.reviews.push(productReview);
+    })
   }
 });
 
@@ -320,7 +306,7 @@ Vue.component('product-review', {
   template: `
     <form @submit.prevent="onSubmit" novalidate>
       <fieldset>
-        <legend>
+        <legend hidden="">
           Leave Your Review
         </legend>
 
@@ -406,7 +392,9 @@ Vue.component('product-review', {
         }
         // emit data to parent component
         // (what to trigger, what to send)
-        this.$emit('review-submitted', productReview);
+        // this.$emit('review-submitted', productReview);
+        // UPD: to the eventBus Life-cycle hook
+        eventBus.$emit('review-submitted', productReview);
         // reset input values
         this.name = null;
         this.rating = null;
@@ -423,21 +411,65 @@ Vue.component('product-review', {
 
 // Tabs:
 Vue.component('product-tabs', {
+  props: {
+    reviews: {
+      type: Array,
+      required: true
+    }
+  },
   template: `
     <div class="product__tabs">
       <div role="tablist" aria-label="Reviews">
-        <button class="tab" aria-selected="false"
-              :aria-controls="reveiwTabPanel + 'index'"
+        <button class="product__tab" role="tab"
+              :class="{ product__tabActive: selectedTab === tab }"
+              :aria-selected="selectedTab === tab"
+              :tabindex="[ (selectedTab === tab) ? '0' : '-1' ]"
+              :aria-controls="'tabPanel-' + tab"
               v-for="(tab, index) in tabs"
-              :key="index" :id="reveiwTab + 'index'">
+              :key="index" :id="'tab-' + tab"
+              @click="selectedTab = tab">
           {{ tab }}
         </button>
       </div>
+
+      <div v-if="selectedTab === 'Reviews'"
+            id="tabPanel-Reviews" aria-labelledby="tab-Reviews"
+            tabindex="0" role="tabpanel">
+        <p v-if="!reviews.length">There are no reviews yet.</p>
+        <ul v-if="reviews.length">
+          <li v-for="review in reviews">
+            <p>
+              <strong>{{ review.name }}</strong>
+              rated this product at
+              <strong>{{ review.rating }}/5</strong>
+            </p>
+            <p>"{{ review.review }}"</p>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Product review component -->
+      <!-- lestens to review-submitted to trigger method addReview -->
+      <!-- <product-review class="product__review"
+                      v-if="selectedTab === 'LeaveReview'"
+                      @review-submitted="addReview"
+                      id="tabPanel-LeaveReview"
+                      aria-labelledby="tab-LeaveReview"
+                      tabindex="0" role="tabpanel">
+      </product-review> -->
+      <product-review class="product__review"
+                      v-if="selectedTab === 'LeaveReview'"
+                      id="tabPanel-LeaveReview"
+                      aria-labelledby="tab-LeaveReview"
+                      tabindex="0" role="tabpanel">
+      </product-review>
+
     </div>
   `,
   data(){ 
     return {
-      tabs: ['Reviews', 'Leave a review']
+      tabs: ['Reviews', 'LeaveReview'],
+      selectedTab: 'Reviews'
     }
   }
 })
