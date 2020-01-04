@@ -5,7 +5,7 @@
 
 [role="tab"] {
   position: relative;
-  margin: 1rem 1rem 0 0;
+  margin: 0 0.75rem 0 0;
   padding: 0.5rem 1rem;
   border: 1px solid var(--light);
   border-radius: 0.2rem 0.2rem 0 0;

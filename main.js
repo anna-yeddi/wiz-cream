@@ -38,9 +38,6 @@ Vue.component('product', {
           {{ description }}
         </p>
 
-        <!-- Collection of ingredients -->
-        <product-ingredients :details="details"></product-ingredients>
-
         <!-- inventory conditionals -->
         <p v-show="onSale" class="product__info--sale">
           Psst... It's On Sale!
@@ -143,7 +140,9 @@ Vue.component('product', {
 
         <!-- Review Tabs -->
         <h2>Reviews</h2>
-        <product-tabs :reviews="reviews"></product-tabs>
+        <product-tabs :reviews="reviews"
+                      :details="details">
+        </product-tabs>
 
       </div>
 
@@ -286,14 +285,12 @@ Vue.component('product-ingredients', {
     }
   },
   template: `
-    <div>
       <!-- Collection of ingredients -->
-      <ul class="product__info--desc">
+      <ul class="product__info--desc product__info">
         <li v-for="detail in details">
           {{ detail }}
         </li>
       </ul>
-    </div>
   `,
   // data() {
   //   return {
@@ -415,21 +412,35 @@ Vue.component('product-tabs', {
     reviews: {
       type: Array,
       required: true
+    },
+    details: {
+      type: Array,
+      required: true,
+      default: ["Organic ingredients"]
     }
   },
   template: `
     <div class="product__tabs">
       <div role="tablist" aria-label="Reviews">
         <button class="product__tab" role="tab"
-              :class="{ product__tabActive: selectedTab === tab }"
-              :aria-selected="selectedTab === tab"
-              :tabindex="[ (selectedTab === tab) ? '0' : '-1' ]"
-              :aria-controls="'tabPanel-' + tab"
+              :class="{ product__tabActive: selectedTab === tab.id }"
+              :aria-selected="selectedTab === tab.id"
+              :tabindex="[ (selectedTab === tab.id) ? '0' : '-1' ]"
+              :aria-controls="'tabPanel-' + tab.id"
               v-for="(tab, index) in tabs"
-              :key="index" :id="'tab-' + tab"
-              @click="selectedTab = tab">
-          {{ tab }}
+              :key="index" :id="'tab-' + tab.id"
+              @click="selectedTab = tab.id">
+          {{ tab.label }}
         </button>
+      </div>
+
+      <div v-if="selectedTab === 'Ingredients'"
+            id="tabPanel-Ingredients" aria-labelledby="tab-Ingredients"
+            tabindex="0" role="tabpanel">
+
+        <!-- Collection of ingredients -->
+        <product-ingredients :details="details"></product-ingredients>
+
       </div>
 
       <div v-if="selectedTab === 'Reviews'"
@@ -458,9 +469,9 @@ Vue.component('product-tabs', {
                       tabindex="0" role="tabpanel">
       </product-review> -->
       <product-review class="product__review"
-                      v-if="selectedTab === 'LeaveReview'"
-                      id="tabPanel-LeaveReview"
-                      aria-labelledby="tab-LeaveReview"
+                      v-if="selectedTab === 'Leave'"
+                      id="tabPanel-Leave"
+                      aria-labelledby="tab-Leave"
                       tabindex="0" role="tabpanel">
       </product-review>
 
@@ -468,8 +479,21 @@ Vue.component('product-tabs', {
   `,
   data(){ 
     return {
-      tabs: ['Reviews', 'LeaveReview'],
-      selectedTab: 'Reviews'
+      tabs: [
+        {
+          id: 'Ingredients',
+          label: 'Product Ingredients'
+        },
+        {
+          id: 'Reviews',
+          label: 'Product Reviews'
+        },
+        {
+          id: 'Leave',
+          label: 'Leave You Review'
+        }
+      ],
+      selectedTab: 'Ingredients'
     }
   }
 })

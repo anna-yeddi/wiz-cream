@@ -300,10 +300,8 @@ legend {
   }
 
 .product__info {
-  margin: 1rem 0;
+  margin: 0.5rem 1.5rem;
   justify-self: start;
-  background-color: var(--primary); /* fallback color */
-  color: var(--white); /* fallback color */
   font-size: 1.25rem;
   /* font-size: 1.5rem; */
   line-height: normal;
